@@ -1,104 +1,230 @@
-# Video Synopsis AI - Backend Architecture
+# 🎓 AI-Powered Video Synopsis & Intelligent Learning Platform
 
-The backend phase of the **Video Synopsis AI** application is fully completed. This document provides step-by-step instructions for running the server, connecting it to your React frontend, and testing the REST APIs.
-
-## 📁 Architecture Overview
-This is a production-ready, enterprise-level modular backend architecture:
-*   `app/core/` - Configuration logic and Environment settings
-*   `app/database/` - MongoDB Atlas connection and motor client definitions
-*   `app/models/` - Internal Database models mapping to MongoDB BSON schemas
-*   `app/schemas/` - Pydantic models for request/response serialization/validation
-*   `app/utils/` - JWT security, password hashing, and dependency injection
-*   `app/services/` - Business logic controllers performing database CRUD operations
-*   `app/routes/` - FastAPI endpoints (Auth, Synopsis, Admin)
+> **An AI-driven learning platform that transforms lengthy educational videos into concise study material, interactive quizzes, AI-assisted tutoring, and presentation-ready notes using Large Language Models (LLMs), Retrieval-Augmented Generation (RAG), and modern full-stack technologies.**
 
 ---
 
-## 🚀 1. How to Run the Backend Locally
+## 📌 Overview
 
-**Prerequisites:** You must have Python 3.9+ installed on your system.
+The rapid growth of online educational content has made it challenging for students and professionals to efficiently consume long-form video lectures. Hours of content often contain valuable insights but require significant time to watch and revise.
 
-### Step 1: Open Terminal in Backend Folder
-Open your terminal and navigate strictly to the backend folder:
-```bash
-cd "e:\Symboisys technoligies internship\backend"
-```
+This project addresses that challenge by building an **AI-Powered Video Synopsis & Intelligent Learning Platform** that automatically converts educational videos into structured learning resources. The system extracts transcripts, generates intelligent summaries, creates PowerPoint presentations, prepares assessment quizzes, and enables users to interact with an AI-powered Study Coach capable of answering questions directly from video content.
 
-### Step 2: Create a Virtual Environment (Recommended)
-```bash
-python -m venv venv
-# Activate on Windows:
-venv\Scripts\activate
-# Activate on Mac/Linux:
-source venv/bin/activate
-```
-
-### Step 3: Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### Step 4: Configure MongoDB Database
-The `.env` file uses a placeholder string for MongoDB Atlas.
-1. Open `.env`
-2. Replace `MONGODB_URL=mongodb+srv://admin:symbiosys2026@cluster0.mongodb.net/?retryWrites=true&w=majority` with your actual live MongoDB Atlas Connection String.
-3. Keep the `PORT=5000` because the React frontend currently expects it.
-
-### Step 5: Start the Server
-```bash
-python -m app.main
-# OR alternatively:
-uvicorn app.main:app --reload --port 5000
-```
-*You should see output similar to:*
-`INFO: Application startup complete.`
-`INFO: Successfully pinged MongoDB Atlas. Connection established.`
+The platform integrates **Large Language Models (LLMs)**, **Retrieval-Augmented Generation (RAG)**, **Speech-to-Text**, and **Full-Stack Web Development** to deliver a modern AI-assisted learning experience.
 
 ---
 
-## 🔗 2. How the Frontend Connects to the Backend
+# 🚀 Key Features
 
-In your React frontend code (`frontend/src/services/api.ts`):
-```typescript
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+### 🎥 Smart Video Processing
+
+* Extracts transcripts from YouTube videos automatically.
+* Uses Whisper as a fallback for videos without transcripts.
+* Supports long-duration educational content.
+
+### 📝 AI Video Summarization
+
+* Generates chapter-wise summaries.
+* Produces concise study notes.
+* Highlights important concepts automatically.
+
+### 📊 Automatic PowerPoint Generation
+
+* Converts summarized content into presentation slides.
+* Creates professional PPTs automatically.
+* Saves hours of manual work.
+
+### 🤖 AI Study Coach (RAG)
+
+* Retrieval-Augmented Generation based chatbot.
+* Answers questions using only the uploaded video's content.
+* Provides context-aware responses with improved accuracy.
+
+### 🧠 Intelligent Quiz Generator
+
+* Automatically creates MCQs from summarized content.
+* Helps learners evaluate their understanding.
+* Generates topic-specific assessments.
+
+### 👤 Secure Authentication System
+
+* User Registration & Login
+* JWT Authentication
+* Password Recovery
+* Protected Routes
+* Role-based Admin Access
+
+### 📚 Learning Dashboard
+
+* View synopsis history
+* Download generated resources
+* Track generated content
+* Manage previous learning sessions
+
+---
+
+# 🏗️ System Architecture
+
 ```
-When you launch the FastAPI server on port 5000, the React frontend will immediately route its HTTP requests (via Axios) to the backend.
-
-### To switch from Mock data to Real DB in Frontend:
-The `authService.ts` and `synopsisService.ts` files currently have an `IS_DEMO_MODE = true;` flag at the top.
-1. Open `frontend/src/services/authService.ts` and change it to `false`.
-2. Open `frontend/src/services/synopsisService.ts` and change it to `false`.
-3. The frontend will now dynamically use the `POST /api/auth/login` and `POST /api/synopsis/generate` routes we just created!
-
----
-
-## 🧪 3. How to Test APIs in Swagger
-
-FastAPI auto-generates interactive API documentation. You don't even need Postman!
-
-1. **Access Swagger UI:** With the server running, open a browser and go to:
-   [http://127.0.0.1:5000/docs](http://127.0.0.1:5000/docs)
-2. **Register a User:**
-   - Scroll to `POST /api/auth/register`.
-   - Click "Try it out".
-   - Put in a test payload like `{"name": "Test", "email": "test@demo.com", "password": "password123", "role": "User"}`
-   - Click "Execute". You will get a `201 Created` with a Token.
-3. **Authorize the Swagger UI:**
-   - Scroll to the very top right and click the green **"Authorize"** button.
-   - Paste the JWT Token you just received (or use the `POST /api/auth/login` route to get one).
-   - Now, you can safely trigger protected routes like `GET /api/synopsis/history` or `POST /api/synopsis/generate`.
-
----
-
-## 📡 4. Verifying MongoDB Connection
-
-You can verify the connection is successful in two distinct ways:
-1. **Health Check API:** Go to `http://127.0.0.1:5000/api/health` in your browser. You should see `"database": "connected"`.
-2. **MongoDB Atlas UI:** Log in to your MongoDB Atlas dashboard, click "Browse Collections", and observe that a `video_synopsis_ai` database was automatically created containing `users` and `synopses` documents after your first API calls.
+YouTube Video
+        │
+        ▼
+Transcript Extraction
+(YouTube Transcript API / Whisper)
+        │
+        ▼
+Text Preprocessing
+        │
+        ▼
+LLM Summarization
+(OpenAI / Groq)
+        │
+ ┌───────────────┬──────────────┬─────────────┐
+ ▼               ▼              ▼
+Study Notes   PowerPoint     Quiz Generator
+        │
+        ▼
+Vector Database
+        │
+        ▼
+RAG-based AI Study Coach
+        │
+        ▼
+React Frontend
+```
 
 ---
 
-## 🔮 5. Future Scalability (AI Phase)
-Because we built this modularly, adding OpenAI and Whisper in the future is easy:
-1. Provide valid keys in `.env` (`OPENAI_API_KEY`, etc.).
-2. In `app/services/synopsis_service.py`, instead of returning the mock schema, you will fetch the YouTube transcript, pass the text to OpenAI using the standard `openai` python library, map the OpenAI response into the Pydantic schema, and save it to MongoDB identically!
+# 🛠️ Technology Stack
+
+## Frontend
+
+* React.js
+* TypeScript
+* Vite
+* HTML5
+* CSS3
+
+## Backend
+
+* FastAPI
+* Python
+* REST APIs
+
+## Artificial Intelligence
+
+* OpenAI API
+* Groq API
+* Retrieval-Augmented Generation (RAG)
+* Prompt Engineering
+
+## Speech Processing
+
+* Whisper
+* YouTube Transcript API
+* yt-dlp
+
+## Database
+
+* MongoDB Atlas
+
+## Document Generation
+
+* python-pptx
+
+## Authentication
+
+* JWT Authentication
+* Password Hashing
+* Secure User Management
+
+## Version Control
+
+* Git
+* GitHub
+
+---
+
+# 💡 Project Workflow
+
+1. User submits a YouTube video URL.
+2. Transcript is extracted automatically.
+3. AI preprocesses the transcript.
+4. LLM generates an intelligent summary.
+5. Study notes are created.
+6. PowerPoint slides are generated.
+7. Quiz questions are created automatically.
+8. Content is indexed for Retrieval-Augmented Generation.
+9. AI Study Coach answers user questions.
+10. Generated resources are stored for future access.
+
+---
+
+# 🎯 Major Contributions
+
+* Developed an end-to-end AI-powered educational platform from scratch.
+* Designed a scalable full-stack architecture using React and FastAPI.
+* Integrated multiple AI services including OpenAI, Groq, Whisper, and RAG.
+* Automated transcript extraction, summarization, quiz generation, and presentation creation.
+* Built secure authentication and role-based access control.
+* Optimized backend APIs for efficient processing of long educational videos.
+* Implemented modular and maintainable code architecture following industry best practices.
+
+---
+
+# 📈 Skills Demonstrated
+
+* Artificial Intelligence
+* Generative AI
+* Large Language Models (LLMs)
+* Retrieval-Augmented Generation (RAG)
+* Prompt Engineering
+* NLP
+* REST API Development
+* Full Stack Development
+* React.js
+* FastAPI
+* MongoDB
+* Authentication & Authorization
+* Software Architecture
+* Git & GitHub
+
+---
+
+# 🌍 Real-World Applications
+
+* EdTech Platforms
+* AI Learning Assistants
+* Online Course Providers
+* Corporate Training
+* Skill Development Platforms
+* University Learning Systems
+* Knowledge Management Systems
+
+---
+
+# 💼 Internship Project
+
+This project was developed as part of my internship at **Symbiosys Technologies**, where I worked on integrating Generative AI with modern web technologies to build scalable educational solutions. The internship strengthened my expertise in **AI application development**, **LLM integration**, **RAG pipelines**, **backend API design**, and **full-stack software engineering** while collaborating on real-world product development.
+
+---
+
+# 👩‍💻 Author
+
+## **Madhupada Sravanthi Suma**
+
+**B.Tech – Artificial Intelligence**
+
+### Areas of Interest
+
+* Artificial Intelligence
+* Machine Learning
+* Generative AI
+* Large Language Models
+* NLP
+* Computer Vision
+* Full Stack Development
+
+---
+
+## ⭐ If you found this project interesting, consider giving it a Star!
