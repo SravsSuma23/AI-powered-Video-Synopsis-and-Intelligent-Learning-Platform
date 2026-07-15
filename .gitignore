@@ -1,0 +1,26 @@
+﻿# Python
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+.venv/
+
+# Environment variables
+.env
+
+# Node
+node_modules/
+
+# Temporary files
+backend/temp/
+temp/
+*.part
+
+# Generated files
+uploads/
+downloads/
+cache/
+
+# Logs
+*.log
